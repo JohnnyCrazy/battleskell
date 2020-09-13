@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: battleskell
+  namespace: default
+spec:
+  selector:
+    app: battleskell
+  ports:
+    - name: battleskell
+      port: 80
+      targetPort: 3000

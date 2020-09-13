@@ -1,0 +1,141 @@
+<div v-cloak id="game">
+  <div v-if="!loading" .flex.justify-between.flex-wrap>
+    <div .w-full.text-center.md:w-auto.md:text-right.md:absolute.md:right-0.md:mx-4>
+      <state-description v-bind:p-type="game.pType" v-bind:state="game.state">
+    <div .flex.flex-wrap.justify-around.w-full>
+      <setup-view v-if="game.state && game.state.tag === 'Setup'" v-bind:game="game">
+      <turn-view .w-full.xl:w-7/12 v-if="game.state && game.state.tag.endsWith('Turn')" v-bind:game="game">
+      <finished-view v-if="game.state && game.state.tag === 'Finished'" v-bind:game="game">
+      <h2 v-if="game.state && game.state.tag === 'Cancelled'" .text-xl.my-4.text-center.w-full>
+        This game was cancelled due to inactivity
+      <div v-if="game.state && !['Lobby', 'Cancelled'].includes(game.state.tag)" .w-full.md:w-10/12.xl:w-5/12>
+        <h2 .text-xl.my-4.text-center.border-b.w-full>
+          Ship Log
+        <ship-log v-bind:logs="game.logs" v-bind:p-type="game.pType" .w-full>
+
+<script type="text/x-template" id="state-description">
+  <div v-bind:class="data.color || 'bg-gray-900'" .px-2.py-2.mx-2>
+    {{ data.text }}
+
+<script type="text/x-template" id="turn-view">
+  <div .w-full>
+    <h1 .mx-2.text-2xl.w-full>
+      <span v-show="isMyTurn">Turn - Pick a Target Coordinate
+      <span v-show="!isMyTurn">Turn - Wait for Enemy Turn...
+    <div .flex.flex-wrap.justify-around>
+      <div v-bind:class="{ 'opacity-50': isMyTurn }">
+        <h2 .text-xl.my-4.text-center.border-b>
+          Your Battlefield
+        <battlefield v-bind:rows="10" v-bind:cols="10"
+          v-bind:ships="myShips"
+          v-bind:hits="myHittedCells">
+      <div v-bind:class="{ 'opacity-50': !isMyTurn }">
+        <h2 .text-xl.my-4.text-center.border-b>
+          Enemy Battlefield
+        <battlefield v-bind:rows="10" v-bind:cols="10"
+          @fire="onFire"
+          v-bind:can-fire="isMyTurn"
+          v-bind:ships="enemyShips"
+          v-bind:hits="enemyHittedCells">
+
+
+<script type="text/x-template" id="setup-view">
+  <div v-if="isSetupDone">
+    <h1 .mx-2.text-2xl>
+     Setup - Waiting for enemy ...
+  <div v-else>
+    <h1 .mx-2.text-2xl>
+      Setup - Place your Ships
+    <div .my-4.w-full>
+      <div .flex.flex-wrap.justify-around>
+        <div .w-full.md:w-3/12>
+          <h2 .text-xl.my-4.text-center.border-b>
+            1. Select a ship
+          <ship-selector
+            v-bind:ships="ships"
+            v-model="selectedShip"
+            @change-direction="onChangeDirection">
+        <div>
+          <h2 .text-xl.my-4.text-center.border-b>
+            2. Place the ship on the field
+          <battlefield
+            @ship-placed="onShipPlaced"
+            v-bind:ships="placedShips"
+            v-bind:rows="battlefieldRows"
+            v-bind:cols="battlefieldCols"
+            v-bind:ship-to-place="selectedShip">
+          <div class="ml-8 mr-2">
+            <button
+              v-bind:class="!canSubmit && 'opacity-50 cursor-not-allowed'"
+              @click="submit"
+              .w-1/2.px-4.py-2.bg-green-500.hover:bg-green-700>
+              Submit
+            <button @click="reset" .w-1/2.px-4.py-2.bg-orange-500.hover:bg-orange-700>
+              Reset
+
+<script type="text/x-template" id="ship-selector">
+  <div>
+    <button
+      v-for="(ship) in ships"
+      v-bind:class="(selectedShip && selectedShip.id) === ship.id ? 'border-green-700 bg-green-700 hover:bg-green-900' : (ship.disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-900 cursor-pointer')"
+      @click="() => selectedShip = ship.disabled ? selectedShip : ship"
+      .w-full.px-4.py-2.border-solid.my-2.border-2.text-align-left.relative>
+      <div v-bind:class="`bg-${ship.color}`" .absolute.inset-0.w-8.h-full>
+      <span>
+        {{ ship.name }}
+      <span .text-gray-500.float-right.font-mono>
+        ({{ ship.length}}) {{ ship.direction === 'RightWards' ? '→' : '↓' }}
+    <button
+      v-bind:disabled="!selectedShip"
+      @click="changeDirection"
+      v-bind:class="selectedShip ? '' : 'opacity-50 cursor-not-allowed'"
+      .px-4.my-2.py-2.w-full.bg-blue-500>
+      Rotate Selected Ship
+
+<script type="text/x-template" id="battlefield">
+  <div @click="onClick" @mouseleave="onMouseOut">
+    <div .ml-8>
+      <span v-for="col in colNames" .px-3.font-mono>
+        {{ col }}
+    <div
+      v-for="(row, rowIndex) in rowNames"
+      v-bind:key="rowIndex"
+      .flex.justify-center style="height: 35px;">
+      <div .px-2.py-2.font-mono>
+        {{ row }}
+      <battlefield-cell
+        v-bind:cell="cellStates[rowIndex][colIndex]"
+        v-for="(col, colIndex) in colNames"
+        v-bind:key="colIndex + (rowIndex * 10)"
+        @hover="() => onCellHover(rowIndex, colIndex)">
+
+<script type="text/x-template" id="battlefield-cell">
+  <div
+    @mouseover="onHover"
+    v-bind:class="classes"
+    .inline-block.border.border-solid.relative
+    style="height: 35px; width: 35px;">
+      <img src=@{StaticR img_cross_svg} width="35" height="35" v-show="isHit" v-bind:class="crossClasses" .absolute.inset-0.p-1>
+
+<script type="text/x-template" id="ship-log">
+  <div .bg-black.font-mono.whitespace-pre.p-2.overflow-y-scroll style="max-height: 350px;">
+    <div .text-green-400 v-for="log in logs" v-bind:key="log.id">
+      [{{ log.createdAtStr }}] - {{ log.from }} - {{ log.msg }}
+<script type="text/x-template" id="finished-view">
+  <h1 .mx-2.text-2xl.w-full>
+     Finished - The Game is over
+  <div .flex.flex-wrap.justify-around>
+    <div>
+      <h2 .text-xl.my-4.text-center.border-b>
+        Your Battlefield
+      <battlefield v-bind:rows="10" v-bind:cols="10"
+        v-bind:ships="myShips"
+        v-bind:hits="myHittedCells">
+    <div>
+      <h2 .text-xl.my-4.text-center.border-b>
+        Enemy Battlefield
+      <battlefield v-bind:rows="10" v-bind:cols="10"
+        v-bind:ships="enemyShips"
+        v-bind:hits="enemyHittedCells">
+
+<script type="module" src=@{StaticR js_game_mjs}>

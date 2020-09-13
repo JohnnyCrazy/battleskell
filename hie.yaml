@@ -1,0 +1,17 @@
+cradle:
+  multi:
+    - path: "./app/devel.hs"
+      config: { cradle: { none } }
+
+    - path: "./"
+      config:
+        cradle:
+          stack:
+            - path: "./src"
+              component: "battleskell:lib"
+
+            - path: "./app"
+              component: "battleskell:exe:battleskell"
+
+            - path: "./test"
+              component: "battleskell:test:battleskell-test"

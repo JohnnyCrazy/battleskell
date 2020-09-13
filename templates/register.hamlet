@@ -1,0 +1,25 @@
+<div class="flex justify-center" id="loginForm">
+  <div class="w-full max-w-screen-sm px-4">
+    <form class="bg-gray-900 shadow-md rounded px-8 pt-6 pb-8 mb-4" @submit="onSubmit" method="post" action="@{RegisterR}">
+      <ul class="flex border-b border-red-500 border-1 mb-4 pb-4">
+        <h2 .w-full.text-center.block.text-2xl>
+          Register
+      $maybe errors <- mErrors
+        <ul>
+          $forall error <- errors
+            <li class="bg-red-600 p-2 mb-4">❌ #{ error }
+      <div class="mb-4">
+        <label class="block text-sm font-bold mb-2" for="username">
+          Username
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" name="username" type="text" placeholder="Username" required autofocus>
+      <div class="mb-6">
+        <label class="block text-sm font-bold mb-2" for="password">
+          Password
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="password" id="password" type="password" placeholder="******************" required>
+      <div class="mb-6">
+        <label class="block text-sm font-bold mb-2" for="password">
+          Password Confirmation
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="password" id="password-confirmation" type="password" placeholder="******************" required>
+      <div class="flex items-center justify-between flex-row-reverse">
+        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" value="Login" >
+          Register

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: battleskell
+  namespace: default
+  labels:
+    app: battleskell
+spec:
+  selector:
+    matchLabels:
+      app: battleskell
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: battleskell
+    spec:
+      imagePullSecrets:
+        - name: gitlab-pull-auth
+      # initContainers:
+      # Init containers are exactly like regular containers, except:
+      # - Init containers always run to completion.
+      # - Each init container must complete successfully before the next one starts.
+      containers:
+        - name: battleskell
+          image: ghcr.io/johnnycrazy/battleskell:v14
+          env:
+            - name: YESOD_PGHOST
+              value: pg.db.svc.cluster.local
+          ports:
+            - containerPort: 3000
+              name: http

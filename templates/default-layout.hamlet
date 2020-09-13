@@ -1,0 +1,19 @@
+<nav .flex.items-center.justify-between.flex-wrap.bg-red-900.p-6>
+  <a href=@{HomeR} .text-white.font-semibold.text-xl.tracking-tight>
+    Battleskell
+  $maybe User username _ elo <- user
+    <span>
+      #{username} (ELO: #{elo})
+      <a href=@{AuthR LogoutR} .ml-4.bg-red-600.hover:bg-red-700.text-white.font-bold.py-2.px-4.rounded>
+        Logout
+  $nothing
+    <span>
+      <a href=@{AuthR LoginR} .bg-red-500.hover:bg-red-700.text-white.font-bold.py-2.px-4.rounded>
+        Login
+      <a href=@{RegisterR} .bg-red-500.hover:bg-red-700.text-white.font-bold.py-2.px-4.rounded>
+        Register
+
+
+<main .flex.flex-row.flex-wrap.w-full>
+  <div class="#{containerClassname}">
+    ^{widget}

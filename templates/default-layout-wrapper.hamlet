@@ -1,0 +1,35 @@
+$newline never
+\<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>#{pageTitle pc}
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    ^{pageHead pc}
+    <link href="https://unpkg.com/tailwindcss@1.8.3/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+      [v-cloak] {
+        display: none;
+      }
+    <script>
+      /* The `defaultCsrfMiddleware` Middleware added in Foundation.hs adds a CSRF token to the request cookies. */
+      /* AJAX requests should add that token to a header to be validated by the server. */
+      /* See the CSRF documentation in the Yesod.Core.Handler module of the yesod-core package for details. */
+      $# var csrfHeaderName = "#{TE.decodeUtf8 $ CI.foldedCase defaultCsrfHeaderName}";
+
+      $# var csrfCookieName = "#{TE.decodeUtf8 defaultCsrfCookieName}";
+      $# var csrfToken = Cookies.get(csrfCookieName);
+
+
+      $# if (csrfToken) {
+      $# \  $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+      $# \      if (!options.crossDomain) {
+      $# \          jqXHR.setRequestHeader(csrfHeaderName, csrfToken);
+      $# \      }
+      $# \  });
+      $# }
+  <body .min-h-screen.w-full.text-gray-200.bg-gray-800>
+    ^{pageBody pc}

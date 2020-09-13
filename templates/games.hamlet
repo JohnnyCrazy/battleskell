@@ -1,0 +1,26 @@
+<table .table-auto.min-w-full v-cloak id="game-table">
+  <thead>
+    <tr>
+      <th class="px-4 py-2 ">
+        Number
+      <th class="px-4 py-2 ">
+        Host
+      <th class="px-4 py-2">
+        Actions
+  <tbody>
+    <tr v-show="games.length === 0">
+      <td .border.px-4.py-2.text-center colspan="3">
+        No Lobbies found
+    <tr v-for="({ username, game }) in games" v-bind:key="game.id">
+      <td .border.px-4.py-2>
+        {{ game.id }}
+      <td .border.px-4.py-2>
+        {{ username }}
+      <td .border.px-4.py-2>
+        <form method="post" v-bind:action="`/games/${game.id}`">
+          <button type="submit"
+              .bg-green-500.hover:bg-green-700.text-white.font-bold.py-2.px-4.rounded.w-full.block.text-center
+              v-bind:href="`/games/${game.id}`">
+            Join
+
+<script type="module" src=@{StaticR js_games_mjs}>

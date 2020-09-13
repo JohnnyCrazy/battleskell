@@ -1,0 +1,5 @@
+<div .bg-red-600.p-2.mb-4>
+  ❌ There was an error processing your request, possible reasons:
+  <ul .list-disc>
+    $forall errorMsg <- errors
+      <li .ml-8>#{ errorMsg }

@@ -1,0 +1,29 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: battleskell
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`battleskell.dellinger.dev`)
+      services:
+        - kind: Service
+          name: battleskell
+          passHostHeader: true
+          port: 80
+  tls:
+    secretName: battleskell-cert
+---
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: battleskell-cert
+spec:
+  secretName: battleskell-cert
+  dnsNames:
+    - battleskell.dellinger.dev
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

@@ -1,0 +1,35 @@
+<h1 .text-4xl>
+  Battleskell
+<h2 .text-xl>
+  A real-time Battleship game written in Haskell, with the help of Vue
+
+<div .mt-8>
+  $maybe _ <- user
+    <div .flex.items-center.justify-around>
+      <form method="post" action=@{GamesR}>
+        <button type="submit" .bg-green-500.hover:bg-green-700.text-white.font-bold.py-2.px-4.rounded.text-xl>
+          New Game
+      <a href=@{GamesR}>
+        <button .bg-blue-500.hover:bg-blue-700.text-white.font-bold.py-2.px-4.rounded.text-xl>
+          Join Game
+  $nothing
+    <p>
+      Before you can start creating and joining amazing battleship games, please register/login first.
+<div .mt-8.flex.flex-wrap.justify-around.w-full>
+  <h3 .text-2xl.w-full.text-center>
+    Leaderboard
+  <table .table-auto>
+    <thead>
+      <tr>
+        <th .px-4.py-2>
+          Name
+        <th .px-4.py-2>
+          Games Played
+        <th .px-4.py-2>
+          ELO
+    <tbody>
+      $forall (Entity _ user, E.Value gameCount) <- leaderboard
+        <tr>
+          <td .border.px-4.py-2>#{userUsername user}
+          <td .border.px-4.py-2>#{gameCount}
+          <td .border.px-4.py-2>#{userElo user}
